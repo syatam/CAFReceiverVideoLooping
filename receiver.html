@@ -1,0 +1,53 @@
+<!--
+Loop queue of videos or a single video using CAF receiver
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <script type="text/javascript"
+      src="//www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js">
+  </script>
+</head>
+<body>
+  <cast-media-player id="player"></cast-media-player>
+  <script>
+    const context = cast.framework.CastReceiverContext.getInstance();
+    
+    // Creates a simple queue with a combination of contents.
+    const DemoQueue = class extends cast.framework.QueueBase {
+    constructor() {
+      super();
+   /**
+    * List of media urls.
+    * @private @const {!Array<string>}
+    */
+   this.myMediaUrls_ = ["https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/WeAreGoingOnBullrun.m3u8"];
+ }
+
+ /**
+  * Provide a list of items.
+  * @param {!cast.framework.messages.LoadRequestData} loadRequestData
+  * @return {!cast.framework.messages.QueueData}
+  */
+ initialize(loadRequestData) {
+    const items = [];    
+    for (const mediaUrl of this.myMediaUrls_) {
+     const item = new cast.framework.messages.QueueItem();
+     item.media = new cast.framework.messages.MediaInformation();
+     item.media.contentId = mediaUrl;
+     items.push(item);
+    }
+    
+    const queueData = loadRequestData.queueData || new cast.framework.messages.QueueData();
+    queueData.items = items;
+    queueData.repeatMode = "REPEAT_ALL"; // "REPEAT_SINGLE" -> The current item will be played repeatedly.
+    // Start with the first item in the playlist.
+    queueData.startIndex = 0;
+   return queueData;
+ }
+};
+    
+    context.start({queue: new DemoQueue()});
+  </script>
+</body>
+</html>
