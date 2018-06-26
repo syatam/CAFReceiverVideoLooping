@@ -1,4 +1,4 @@
-# CAFReciverVideoLooping
+# CAFReceiverVideoLooping
 This Cast receiver application shows how to loop video playback using Google CAF Receiver.
 
 # Dependencies
